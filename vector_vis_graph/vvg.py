@@ -11,12 +11,13 @@ def calculate_weight(
     vector_b: torch.Tensor,
     time_a: torch.Tensor,
     time_b: torch.Tensor,
-    unweighted: bool = True,
+    weighted: bool = False,
 ) -> torch.Tensor:
-    if unweighted:
-        return torch.tensor(1.0)
+    if weighted:
+        inner = torch.dot(vector_a, vector_b) / (vector_a.norm() * vector_b.norm())
+        return inner / torch.abs(time_b - time_a)
     else:
-        return torch.dot(vector_a, vector_b) / torch.abs(time_b - time_a)
+        return torch.tensor(1.0)
 
 
 @torch.jit.script
@@ -24,7 +25,7 @@ def _natural_vvg_loop(
     multivariate_tensor: torch.Tensor,
     timeline: torch.Tensor,
     projections: torch.Tensor,
-    unweighted: bool,
+    weighted: bool,
     device: torch.device,
 ) -> torch.Tensor:
     time_length = timeline.size(0)
@@ -49,7 +50,7 @@ def _natural_vvg_loop(
                     multivariate_tensor[b],
                     t_a,
                     t_b,
-                    unweighted=unweighted,
+                    weighted=weighted,
                 )
 
     return vvg_adjacency
@@ -59,7 +60,7 @@ def natural_vvg(
     multivariate_tensor: torch.Tensor,
     *,
     timeline: Optional[torch.Tensor] = None,
-    unweighted: bool = True,
+    weighted: bool = False,
     device: Optional[torch.device] = None,
 ) -> torch.Tensor:
     if device is None:
@@ -80,6 +81,6 @@ def natural_vvg(
         multivariate_tensor,
         timeline,
         projections,
-        unweighted,
+        weighted,
         device,
     )
