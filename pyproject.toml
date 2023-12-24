@@ -6,7 +6,9 @@ authors = ["Tuna Alikaşifoğlu <tunakasif@gmail.com>"]
 
 [tool.poetry.dependencies]
 python = ">=3.10,<3.12"
-torch = "^2.1.1"
+numpy = "^1.26.2"
+numba = "^0.58.1"
+scipy = "^1.11.4"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.1.4"
