@@ -5,7 +5,6 @@ import torch
 from vector_vis_graph.utils import project_onto_tensor
 
 
-@torch.jit.script
 def calculate_weight(
     vector_a: torch.Tensor,
     vector_b: torch.Tensor,
@@ -20,7 +19,6 @@ def calculate_weight(
         return torch.tensor(1.0)
 
 
-@torch.jit.script
 def _natural_vvg_loop(
     multivariate_tensor: torch.Tensor,
     timeline: torch.Tensor,

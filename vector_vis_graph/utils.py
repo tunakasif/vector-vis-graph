@@ -1,7 +1,6 @@
 import torch
 
 
-@torch.jit.script
 def project_onto_vector(
     from_tensor: torch.Tensor,
     onto_vector: torch.Tensor,
