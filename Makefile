@@ -13,7 +13,7 @@ clean:
 	$(EXECUTER) ruff clean
 
 requirements:
-	poetry export -f requirements.txt -o requirements.txt --with dev --without-hashes
+	poetry export -f requirements.txt -o requirements.txt --with dev,test --without-hashes
 
 test:
 	$(EXECUTER) pytest --cov-report term-missing --cov-report html --cov $(PROJECT_NAME)/
