@@ -1,7 +1,7 @@
 # Vector Vis Graph
 
 [![Build](https://github.com/tunakasif/vector-vis-graph/actions/workflows/build.yml/badge.svg)](https://github.com/tunakasif/vector-vis-graph/actions/workflows/build.yml)
-[![codecov](https://codecov.io/gh/tunakasif/vector-vis-graph/graph/badge.svg?token=5QJRTQZ9B0)](https://codecov.io/gh/tunakasif/vector-vis-graph)
+[![codecov](https://codecov.io/gh/tunakasif/vector-vis-graph/graph/badge.svg?token=1RQ1RDMT9G)](https://codecov.io/gh/tunakasif/vector-vis-graph)
 
 ## Installation
 
