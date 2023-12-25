@@ -68,12 +68,10 @@ def _natural_vvg_loop(
     return vvg_adjacency
 
 
-def natural_vvg(
+def _ensure_vvg_input(
     multivariate_tensor: np.ndarray,
-    *,
     timeline: Optional[np.ndarray] = None,
-    weighted: bool = False,
-) -> np.ndarray:
+) -> tuple[np.ndarray, np.ndarray]:
     if timeline is None:
         timeline = np.arange(multivariate_tensor.shape[0])
     elif len(timeline.shape) != 1:
@@ -86,8 +84,17 @@ def natural_vvg(
 
     if multivariate_tensor.ndim == 1:
         multivariate_tensor = multivariate_tensor.reshape(-1, 1)
-    projections = project_onto_matrix(multivariate_tensor, multivariate_tensor)
+    return multivariate_tensor, timeline
 
+
+def natural_vvg(
+    multivariate_tensor: np.ndarray,
+    *,
+    timeline: Optional[np.ndarray] = None,
+    weighted: bool = False,
+) -> np.ndarray:
+    multivariate_tensor, timeline = _ensure_vvg_input(multivariate_tensor, timeline)
+    projections = project_onto_matrix(multivariate_tensor, multivariate_tensor)
     return _natural_vvg_loop(
         multivariate_tensor,
         timeline,
