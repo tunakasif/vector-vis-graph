@@ -23,6 +23,29 @@ def calculate_weight(
 
 
 @njit(cache=True)
+def _is_visible(
+    curr_projection: np.ndarray,
+    timeline: np.ndarray,
+    a: int,
+    b: int,
+) -> bool:
+    if a < b:
+        x_aa = curr_projection[a]
+        x_ab = curr_projection[b]
+        t_a = timeline[a]
+        t_b = timeline[b]
+
+        x_acs = curr_projection[a + 1 : b]
+        t_cs = timeline[a + 1 : b]
+
+        lhs = np.divide(x_acs - x_ab, t_b - t_cs)
+        rhs = (x_aa - x_ab) / (t_b - t_a)
+        return bool(np.all(lhs < rhs))
+    else:
+        return False
+
+
+@njit(cache=True)
 def _natural_vvg_loop(
     multivariate_tensor: np.ndarray,
     timeline: np.ndarray,
@@ -32,28 +55,16 @@ def _natural_vvg_loop(
     time_length = timeline.shape[0]
     vvg_adjacency = np.zeros((time_length, time_length))
     for a in range(time_length - 1):
-        t_a = timeline[a]
-        x_aa = projections[a, a]
-
+        curr_projection = projections[a]
         for b in range(a + 1, time_length):
-            x_ab = projections[a, b]
-            t_b = timeline[b]
-
-            x_acs = projections[a, a + 1 : b]
-            t_cs = timeline[a + 1 : b]
-
-            lhs = np.divide(x_acs - x_ab, t_b - t_cs)
-            rhs = np.divide(x_aa - x_ab, t_b - t_a)
-
-            if np.all(lhs < rhs):
+            if _is_visible(curr_projection, timeline, a, b):
                 vvg_adjacency[a, b] = calculate_weight(
                     multivariate_tensor[a],
                     multivariate_tensor[b],
-                    t_a,
-                    t_b,
+                    timeline[a],
+                    timeline[b],
                     weighted=weighted,
                 )
-
     return vvg_adjacency
 
 
