@@ -23,6 +23,58 @@ def calculate_weight(
 
 
 @njit(cache=True)
+def _natural_vvg_loop_dc(
+    multivariate_tensor: np.ndarray,
+    timeline: np.ndarray,
+    projections: np.ndarray,
+    vvg_adjacency: np.ndarray,
+    weighted: bool,
+    left: int,
+    right: int,
+) -> None:
+    if left < right:
+        curr_projection = projections[left]
+        max_idx = left + int(np.argmax(curr_projection[left:right]))
+        for idx in range(left, max_idx):
+            if _is_visible(curr_projection, timeline, idx, max_idx):
+                vvg_adjacency[idx, max_idx] = calculate_weight(
+                    multivariate_tensor[idx],
+                    multivariate_tensor[max_idx],
+                    timeline[idx],
+                    timeline[max_idx],
+                    weighted=weighted,
+                )
+        for idx in range(max_idx + 1, right):
+            if _is_visible(curr_projection, timeline, max_idx, idx):
+                vvg_adjacency[max_idx, idx] = calculate_weight(
+                    multivariate_tensor[max_idx],
+                    multivariate_tensor[idx],
+                    timeline[max_idx],
+                    timeline[idx],
+                    weighted=weighted,
+                )
+
+        _natural_vvg_loop_dc(
+            multivariate_tensor,
+            timeline,
+            projections,
+            vvg_adjacency,
+            weighted,
+            left,
+            max_idx,
+        )
+        _natural_vvg_loop_dc(
+            multivariate_tensor,
+            timeline,
+            projections,
+            vvg_adjacency,
+            weighted,
+            max_idx + 1,
+            right,
+        )
+
+
+@njit(cache=True)
 def _is_visible(
     curr_projection: np.ndarray,
     timeline: np.ndarray,
@@ -101,3 +153,25 @@ def natural_vvg(
         projections,
         weighted,
     )
+
+
+def natural_vvg_dc(
+    multivariate_tensor: np.ndarray,
+    *,
+    timeline: Optional[np.ndarray] = None,
+    weighted: bool = False,
+) -> np.ndarray:
+    multivariate_tensor, timeline = _ensure_vvg_input(multivariate_tensor, timeline)
+    projections = project_onto_matrix(multivariate_tensor, multivariate_tensor)
+    time_length = timeline.shape[0]
+    vvg_adjacency = np.zeros((time_length, time_length))
+    _natural_vvg_loop_dc(
+        multivariate_tensor,
+        timeline,
+        projections,
+        vvg_adjacency,
+        weighted,
+        0,
+        time_length,
+    )
+    return vvg_adjacency
