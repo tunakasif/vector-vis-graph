@@ -2,6 +2,7 @@ from typing import Optional
 
 import numpy as np
 from numba import njit, prange
+from ts2vg.graph._natural import _compute_graph as _compute_graph_natural
 
 from vector_vis_graph.utils import project_onto_matrix
 
@@ -103,3 +104,29 @@ def natural_vvg(
     )
 
 
+def natural_vvg_ts2vg(
+    multivariate_tensor: np.ndarray,
+    timeline: Optional[np.ndarray] = None,
+) -> np.ndarray:
+    multivariate_tensor, timeline = _ensure_vvg_input(multivariate_tensor, timeline)
+    projections = project_onto_matrix(multivariate_tensor, multivariate_tensor)
+    if multivariate_tensor.ndim == 1:
+        tmp = multivariate_tensor.reshape(-1, 1)
+        projections = project_onto_matrix(tmp, tmp)
+    else:
+        projections = project_onto_matrix(multivariate_tensor, multivariate_tensor)
+
+    N = projections.shape[0]
+    adj = np.array([np.pad(_adj_cgdc_first(projections[i, i:]), (i, 0)) for i in range(N - 1)])
+    adj = np.vstack([adj, np.zeros(N)])
+    return adj
+
+
+def _adj_cgdc_first(ts: np.ndarray) -> np.ndarray:
+    xs = np.arange(len(ts), dtype=np.float64)
+    edges, *_ = _compute_graph_natural(ts, xs, 1, 0, False, float("-inf"), float("inf"))
+    edges_array = np.asarray(edges)
+    idx = edges_array[:, 0] == 0
+    first_row_adj = np.zeros(len(ts))
+    first_row_adj[edges_array[idx, 1]] = 1
+    return first_row_adj
