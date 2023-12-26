@@ -9,7 +9,7 @@ install:
 	$(EXECUTER) pre-commit install
 
 clean:
-	rm -rf .mypy_cache .pytest_cache .coverage htmlcov
+	rm -rf .hypothesis .ipynb_checkpoints .mypy_cache .pytest_cache .coverage htmlcov
 	$(EXECUTER) ruff clean
 
 requirements:
