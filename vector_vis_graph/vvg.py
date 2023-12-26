@@ -4,8 +4,6 @@ import numpy as np
 from numba import njit, prange
 from ts2vg.graph._natural import _compute_graph as _compute_graph_natural
 
-from vector_vis_graph.utils import project_onto_matrix
-
 
 @njit(cache=True)
 def calculate_weight(
@@ -50,9 +48,9 @@ def _is_visible(
 def _natural_vvg_loop(
     multivariate_tensor: np.ndarray,
     timeline: np.ndarray,
-    projections: np.ndarray,
     weighted: bool,
 ) -> np.ndarray:
+    projections = np.dot(multivariate_tensor, multivariate_tensor.T)
     time_length = timeline.shape[0]
     vvg_adjacency = np.zeros((time_length, time_length))
     for a in prange(time_length - 1):
@@ -95,11 +93,9 @@ def natural_vvg(
     weighted: bool = False,
 ) -> np.ndarray:
     multivariate_tensor, timeline = _ensure_vvg_input(multivariate_tensor, timeline)
-    projections = project_onto_matrix(multivariate_tensor, multivariate_tensor)
     return _natural_vvg_loop(
         multivariate_tensor,
         timeline,
-        projections,
         weighted,
     )
 
@@ -109,12 +105,11 @@ def natural_vvg_ts2vg(
     timeline: Optional[np.ndarray] = None,
 ) -> np.ndarray:
     multivariate_tensor, timeline = _ensure_vvg_input(multivariate_tensor, timeline)
-    projections = project_onto_matrix(multivariate_tensor, multivariate_tensor)
     if multivariate_tensor.ndim == 1:
         tmp = multivariate_tensor.reshape(-1, 1)
-        projections = project_onto_matrix(tmp, tmp)
+        projections = np.dot(tmp, tmp.T)
     else:
-        projections = project_onto_matrix(multivariate_tensor, multivariate_tensor)
+        projections = np.dot(multivariate_tensor, multivariate_tensor.T)
 
     N = projections.shape[0]
     adj = np.array([np.pad(_adj_cgdc_first(projections[i, i:]), (i, 0)) for i in range(N - 1)])
