@@ -1,7 +1,7 @@
 from typing import Optional
 
 import numpy as np
-from numba import njit
+from numba import njit, prange
 
 from vector_vis_graph.utils import project_onto_matrix
 
@@ -45,7 +45,7 @@ def _is_visible(
         return False
 
 
-@njit(cache=True)
+@njit(cache=True, parallel=True)
 def _natural_vvg_loop(
     multivariate_tensor: np.ndarray,
     timeline: np.ndarray,
@@ -54,9 +54,9 @@ def _natural_vvg_loop(
 ) -> np.ndarray:
     time_length = timeline.shape[0]
     vvg_adjacency = np.zeros((time_length, time_length))
-    for a in range(time_length - 1):
+    for a in prange(time_length - 1):
         curr_projection = projections[a]
-        for b in range(a + 1, time_length):
+        for b in prange(a + 1, time_length):
             if _is_visible(curr_projection, timeline, a, b):
                 vvg_adjacency[a, b] = calculate_weight(
                     multivariate_tensor[a],
@@ -101,6 +101,5 @@ def natural_vvg(
         projections,
         weighted,
     )
-
 
 
