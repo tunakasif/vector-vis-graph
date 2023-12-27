@@ -1,3 +1,9 @@
+## 0.5.0 (2023-12-27)
+
+### Feat
+
+- **lpvg**: add penetrable limit to visibility
+
 ## 0.4.0 (2023-12-27)
 
 ### Feat
