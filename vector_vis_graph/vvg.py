@@ -44,9 +44,7 @@ def _is_visible_natural(curr_projection: np.ndarray, timeline: np.ndarray, a: in
 
 
 @njit(cache=True)
-def _is_visible_horizontal(
-    curr_projection: np.ndarray, _timeline: np.ndarray, a: int, b: int
-) -> bool:
+def _is_visible_horizontal(curr_projection: np.ndarray, _timeline: np.ndarray, a: int, b: int) -> bool:
     if a < b:
         first = curr_projection[a]
         last = curr_projection[b]
@@ -139,10 +137,7 @@ def natural_vvg_ts2vg(
     projections = np.dot(multivariate_tensor, multivariate_tensor.T)
     N = projections.shape[0]
     adj = np.array(
-        [
-            np.pad(_adj_cg_first(projections[i, i:], _compute_graph_natural), (i, 0))
-            for i in range(N - 1)
-        ]
+        [np.pad(_adj_cg_first(projections[i, i:], _compute_graph_natural), (i, 0)) for i in range(N - 1)]
     )
     adj = np.vstack([adj, np.zeros(N)])
     return adj
@@ -156,10 +151,7 @@ def horizontal_vvg_ts2vg(
     projections = np.dot(multivariate_tensor, multivariate_tensor.T)
     N = projections.shape[0]
     adj = np.array(
-        [
-            np.pad(_adj_cg_first(projections[i, i:], _compute_graph_horizontal), (i, 0))
-            for i in range(N - 1)
-        ]
+        [np.pad(_adj_cg_first(projections[i, i:], _compute_graph_horizontal), (i, 0)) for i in range(N - 1)]
     )
     adj = np.vstack([adj, np.zeros(N)])
     return adj
