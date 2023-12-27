@@ -5,7 +5,7 @@ from numba import njit, prange
 from ts2vg.graph._horizontal import _compute_graph as _compute_graph_horizontal
 from ts2vg.graph._natural import _compute_graph as _compute_graph_natural
 
-VisibilityFuncType = Callable[[np.ndarray, np.ndarray, int, int], bool]
+VisibilityFuncType = Callable[[np.ndarray, np.ndarray, int, int, int], bool]
 WeigthFuncType = Callable[[np.ndarray, np.ndarray, float, float, bool], float]
 
 
@@ -26,7 +26,9 @@ def calculate_weight(
 
 
 @njit(cache=True)
-def _is_visible_natural(curr_projection: np.ndarray, timeline: np.ndarray, a: int, b: int) -> bool:
+def _is_visible_natural(
+    curr_projection: np.ndarray, timeline: np.ndarray, a: int, b: int, penetrable_limit: int = 0
+) -> bool:
     if a < b:
         x_aa = curr_projection[a]
         x_ab = curr_projection[b]
@@ -38,18 +40,20 @@ def _is_visible_natural(curr_projection: np.ndarray, timeline: np.ndarray, a: in
 
         lhs = np.divide(x_acs - x_ab, t_b - t_cs)
         rhs = (x_aa - x_ab) / (t_b - t_a)
-        return bool(np.all(lhs < rhs))
+        return np.sum(lhs >= rhs) <= penetrable_limit
     else:
         return False
 
 
 @njit(cache=True)
-def _is_visible_horizontal(curr_projection: np.ndarray, _timeline: np.ndarray, a: int, b: int) -> bool:
+def _is_visible_horizontal(
+    curr_projection: np.ndarray, _timeline: np.ndarray, a: int, b: int, penetrable_limit: int = 0
+) -> bool:
     if a < b:
         first = curr_projection[a]
         last = curr_projection[b]
         middle = curr_projection[a + 1 : b]
-        return bool(np.all(middle < min(first, last)))
+        return np.sum(middle >= min(first, last)) <= penetrable_limit
     else:
         return False
 
@@ -61,6 +65,7 @@ def _vvg_loop(
     weighted: bool,
     visibility_func: VisibilityFuncType,
     weight_func: WeigthFuncType,
+    penetrable_limit: int = 0,
 ) -> np.ndarray:
     projections = np.dot(multivariate_tensor, multivariate_tensor.T)
     time_length = timeline.shape[0]
@@ -68,7 +73,7 @@ def _vvg_loop(
     for a in prange(time_length - 1):
         curr_projection = projections[a]
         for b in prange(a + 1, time_length):
-            if visibility_func(curr_projection, timeline, a, b):
+            if visibility_func(curr_projection, timeline, a, b, penetrable_limit):
                 vvg_adjacency[a, b] = weight_func(
                     multivariate_tensor[a],
                     multivariate_tensor[b],
@@ -102,6 +107,7 @@ def natural_vvg(
     *,
     timeline: Optional[np.ndarray] = None,
     weighted: bool = False,
+    penetrable_limit: int = 0,
 ) -> np.ndarray:
     multivariate_tensor, timeline = _ensure_vvg_input(multivariate_tensor, timeline)
     return _vvg_loop(
@@ -110,6 +116,7 @@ def natural_vvg(
         weighted,
         _is_visible_natural,
         calculate_weight,
+        penetrable_limit,
     )
 
 
@@ -118,6 +125,7 @@ def horizontal_vvg(
     *,
     timeline: Optional[np.ndarray] = None,
     weighted: bool = False,
+    penetrable_limit: int = 0,
 ) -> np.ndarray:
     multivariate_tensor, timeline = _ensure_vvg_input(multivariate_tensor, timeline)
     return _vvg_loop(
@@ -126,6 +134,7 @@ def horizontal_vvg(
         weighted,
         _is_visible_horizontal,
         calculate_weight,
+        penetrable_limit,
     )
 
 
