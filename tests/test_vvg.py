@@ -3,12 +3,8 @@ from hypothesis import given, settings
 from hypothesis.strategies import integers
 from ts2vg import HorizontalVG, NaturalVG
 
-from vector_vis_graph.vvg import (
-    horizontal_vvg,
-    horizontal_vvg_ts2vg,
-    natural_vvg,
-    natural_vvg_ts2vg,
-)
+from vector_vis_graph._ts2vg import horizontal_vvg_ts2vg, natural_vvg_ts2vg
+from vector_vis_graph.vvg import horizontal_vvg, natural_vvg
 
 
 @settings(deadline=10000, max_examples=20)
