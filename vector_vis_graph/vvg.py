@@ -1,8 +1,12 @@
-from typing import Optional
+from typing import Callable, Optional
 
 import numpy as np
 from numba import njit, prange
+from ts2vg.graph._horizontal import _compute_graph as _compute_graph_horizontal
 from ts2vg.graph._natural import _compute_graph as _compute_graph_natural
+
+VisibilityFuncType = Callable[[np.ndarray, np.ndarray, int, int], bool]
+WeigthFuncType = Callable[[np.ndarray, np.ndarray, float, float, bool], float]
 
 
 @njit(cache=True)
@@ -22,12 +26,7 @@ def calculate_weight(
 
 
 @njit(cache=True)
-def _is_visible(
-    curr_projection: np.ndarray,
-    timeline: np.ndarray,
-    a: int,
-    b: int,
-) -> bool:
+def _is_visible_natural(curr_projection: np.ndarray, timeline: np.ndarray, a: int, b: int) -> bool:
     if a < b:
         x_aa = curr_projection[a]
         x_ab = curr_projection[b]
@@ -44,11 +43,26 @@ def _is_visible(
         return False
 
 
+@njit(cache=True)
+def _is_visible_horizontal(
+    curr_projection: np.ndarray, _timeline: np.ndarray, a: int, b: int
+) -> bool:
+    if a < b:
+        first = curr_projection[a]
+        last = curr_projection[b]
+        middle = curr_projection[a + 1 : b]
+        return bool(np.all(middle < min(first, last)))
+    else:
+        return False
+
+
 @njit(cache=True, parallel=True)
-def _natural_vvg_loop(
+def _vvg_loop(
     multivariate_tensor: np.ndarray,
     timeline: np.ndarray,
     weighted: bool,
+    visibility_func: VisibilityFuncType,
+    weight_func: WeigthFuncType,
 ) -> np.ndarray:
     projections = np.dot(multivariate_tensor, multivariate_tensor.T)
     time_length = timeline.shape[0]
@@ -56,20 +70,19 @@ def _natural_vvg_loop(
     for a in prange(time_length - 1):
         curr_projection = projections[a]
         for b in prange(a + 1, time_length):
-            if _is_visible(curr_projection, timeline, a, b):
-                vvg_adjacency[a, b] = calculate_weight(
+            if visibility_func(curr_projection, timeline, a, b):
+                vvg_adjacency[a, b] = weight_func(
                     multivariate_tensor[a],
                     multivariate_tensor[b],
                     timeline[a],
                     timeline[b],
-                    weighted=weighted,
+                    weighted,
                 )
     return vvg_adjacency
 
 
 def _ensure_vvg_input(
-    multivariate_tensor: np.ndarray,
-    timeline: Optional[np.ndarray] = None,
+    multivariate_tensor: np.ndarray, timeline: Optional[np.ndarray] = None
 ) -> tuple[np.ndarray, np.ndarray]:
     if timeline is None:
         timeline = np.arange(multivariate_tensor.shape[0])
@@ -93,10 +106,28 @@ def natural_vvg(
     weighted: bool = False,
 ) -> np.ndarray:
     multivariate_tensor, timeline = _ensure_vvg_input(multivariate_tensor, timeline)
-    return _natural_vvg_loop(
+    return _vvg_loop(
         multivariate_tensor,
         timeline,
         weighted,
+        _is_visible_natural,
+        calculate_weight,
+    )
+
+
+def horizontal_vvg(
+    multivariate_tensor: np.ndarray,
+    *,
+    timeline: Optional[np.ndarray] = None,
+    weighted: bool = False,
+) -> np.ndarray:
+    multivariate_tensor, timeline = _ensure_vvg_input(multivariate_tensor, timeline)
+    return _vvg_loop(
+        multivariate_tensor,
+        timeline,
+        weighted,
+        _is_visible_horizontal,
+        calculate_weight,
     )
 
 
@@ -105,21 +136,38 @@ def natural_vvg_ts2vg(
     timeline: Optional[np.ndarray] = None,
 ) -> np.ndarray:
     multivariate_tensor, timeline = _ensure_vvg_input(multivariate_tensor, timeline)
-    if multivariate_tensor.ndim == 1:
-        tmp = multivariate_tensor.reshape(-1, 1)
-        projections = np.dot(tmp, tmp.T)
-    else:
-        projections = np.dot(multivariate_tensor, multivariate_tensor.T)
-
+    projections = np.dot(multivariate_tensor, multivariate_tensor.T)
     N = projections.shape[0]
-    adj = np.array([np.pad(_adj_cgdc_first(projections[i, i:]), (i, 0)) for i in range(N - 1)])
+    adj = np.array(
+        [
+            np.pad(_adj_cg_first(projections[i, i:], _compute_graph_natural), (i, 0))
+            for i in range(N - 1)
+        ]
+    )
     adj = np.vstack([adj, np.zeros(N)])
     return adj
 
 
-def _adj_cgdc_first(ts: np.ndarray) -> np.ndarray:
+def horizontal_vvg_ts2vg(
+    multivariate_tensor: np.ndarray,
+    timeline: Optional[np.ndarray] = None,
+) -> np.ndarray:
+    multivariate_tensor, timeline = _ensure_vvg_input(multivariate_tensor, timeline)
+    projections = np.dot(multivariate_tensor, multivariate_tensor.T)
+    N = projections.shape[0]
+    adj = np.array(
+        [
+            np.pad(_adj_cg_first(projections[i, i:], _compute_graph_horizontal), (i, 0))
+            for i in range(N - 1)
+        ]
+    )
+    adj = np.vstack([adj, np.zeros(N)])
+    return adj
+
+
+def _adj_cg_first(ts: np.ndarray, compute_graph_func: Callable) -> np.ndarray:
     xs = np.arange(len(ts), dtype=np.float64)
-    edges, *_ = _compute_graph_natural(ts, xs, 1, 0, False, float("-inf"), float("inf"))
+    edges, *_ = compute_graph_func(ts, xs, 1, 0, False, float("-inf"), float("inf"))
     edges_array = np.asarray(edges)
     idx = edges_array[:, 0] == 0
     first_row_adj = np.zeros(len(ts))
