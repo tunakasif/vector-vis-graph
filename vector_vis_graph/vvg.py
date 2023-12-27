@@ -3,32 +3,33 @@ from typing import Callable, Optional
 import numpy as np
 from numba import njit, prange
 
-from vector_vis_graph.weight_calculation import time_diff_inner_cosine
+from vector_vis_graph.weight_calculation import WeightFuncType, WeightMethod, get_weight_calculation_func
 
 VisibilityFuncType = Callable[[np.ndarray, np.ndarray, int, int, int], bool]
-WeigthFuncType = Callable[[np.ndarray, np.ndarray, float, float, bool], float]
 
 
 def natural_vvg(
     multivariate: np.ndarray,
     *,
     timeline: Optional[np.ndarray] = None,
-    weighted: bool = False,
+    weight_method: WeightMethod = WeightMethod.UNWEIGHTED,
     penetrable_limit: int = 0,
 ) -> np.ndarray:
     multivariate, timeline = _ensure_vvg_input(multivariate, timeline)
-    return _vvg_loop(multivariate, timeline, weighted, _is_visible_natural, time_diff_inner_cosine, penetrable_limit)
+    weight_func = get_weight_calculation_func(weight_method)
+    return _vvg_loop(multivariate, timeline, _is_visible_natural, weight_func, penetrable_limit)
 
 
 def horizontal_vvg(
     multivariate: np.ndarray,
     *,
     timeline: Optional[np.ndarray] = None,
-    weighted: bool = False,
+    weight_method: WeightMethod = WeightMethod.UNWEIGHTED,
     penetrable_limit: int = 0,
 ) -> np.ndarray:
     multivariate, timeline = _ensure_vvg_input(multivariate, timeline)
-    return _vvg_loop(multivariate, timeline, weighted, _is_visible_horizontal, time_diff_inner_cosine, penetrable_limit)
+    weight_func = get_weight_calculation_func(weight_method)
+    return _vvg_loop(multivariate, timeline, _is_visible_horizontal, weight_func, penetrable_limit)
 
 
 @njit(cache=True)
@@ -61,9 +62,8 @@ def _is_visible_horizontal(
 def _vvg_loop(
     multivariate: np.ndarray,
     timeline: np.ndarray,
-    weighted: bool,
     visibility_func: VisibilityFuncType,
-    weight_func: WeigthFuncType,
+    weight_func: WeightFuncType,
     penetrable_limit: int = 0,
 ) -> np.ndarray:
     projections = np.dot(multivariate, multivariate.T)
@@ -73,7 +73,7 @@ def _vvg_loop(
         curr_projection = projections[i]
         for j in prange(i + 1, time_length):
             if visibility_func(curr_projection, timeline, i, j, penetrable_limit):
-                vvg_adjacency[i, j] = weight_func(multivariate[i], multivariate[j], timeline[i], timeline[j], weighted)
+                vvg_adjacency[i, j] = weight_func(multivariate[i], multivariate[j], timeline[i], timeline[j])
     return vvg_adjacency
 
 
