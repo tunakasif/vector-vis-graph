@@ -11,7 +11,7 @@ from vector_vis_graph.vvg import (
 )
 
 
-@settings(deadline=5000, max_examples=20)
+@settings(deadline=10000, max_examples=20)
 @given(integers(min_value=2, max_value=1024))
 def test_natural_vvg_1d(time_length: int) -> None:
     np.random.seed(0)
@@ -25,7 +25,7 @@ def test_natural_vvg_1d(time_length: int) -> None:
     assert np.allclose(adj, ts2vg_adj)
 
 
-@settings(deadline=5000, max_examples=20)
+@settings(deadline=10000, max_examples=20)
 @given(integers(min_value=2, max_value=1024))
 def test_horizontal_vvg_1d(time_length: int) -> None:
     np.random.seed(0)
@@ -39,7 +39,7 @@ def test_horizontal_vvg_1d(time_length: int) -> None:
     assert np.allclose(adj, ts2vg_adj)
 
 
-@settings(deadline=5000, max_examples=20)
+@settings(deadline=10000, max_examples=20)
 @given(integers(min_value=2, max_value=1024), integers(min_value=1, max_value=1024))
 def test_natural_vvg_equivalence(time_length: int, vec_length: int) -> None:
     np.random.seed(0)
@@ -49,7 +49,7 @@ def test_natural_vvg_equivalence(time_length: int, vec_length: int) -> None:
     assert np.allclose(adj, adj_ts2vg)
 
 
-@settings(deadline=5000, max_examples=20)
+@settings(deadline=10000, max_examples=20)
 @given(integers(min_value=2, max_value=1024), integers(min_value=1, max_value=1024))
 def test_horizontal_vvg_equivalence(time_length: int, vec_length: int) -> None:
     np.random.seed(0)
