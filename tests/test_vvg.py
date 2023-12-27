@@ -10,7 +10,7 @@ from vector_vis_graph.vvg import horizontal_vvg, natural_vvg
 @given(integers(min_value=2, max_value=1024), integers(min_value=1, max_value=1024))
 def test_natural_vvg_equivalence(time_length: int, vec_length: int) -> None:
     np.random.seed(0)
-    X = np.random.rand(time_length, vec_length)
+    X = np.random.randn(time_length, vec_length)
     adj = natural_vvg(X)
     adj_ts2vg = natural_vvg_ts2vg(X)
     assert np.allclose(adj, adj_ts2vg)
@@ -20,7 +20,7 @@ def test_natural_vvg_equivalence(time_length: int, vec_length: int) -> None:
 @given(integers(min_value=2, max_value=1024), integers(min_value=1, max_value=1024))
 def test_horizontal_vvg_equivalence(time_length: int, vec_length: int) -> None:
     np.random.seed(0)
-    X = np.random.rand(time_length, vec_length)
+    X = np.random.randn(time_length, vec_length)
     adj = horizontal_vvg(X)
     adj_ts2vg = horizontal_vvg_ts2vg(X)
     assert np.allclose(adj, adj_ts2vg)
