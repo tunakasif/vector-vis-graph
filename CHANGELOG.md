@@ -1,3 +1,10 @@
+## 0.4.0 (2023-12-27)
+
+### Feat
+
+- implement horizontal `vvg`
+- improve projection performance
+
 ## 0.3.0 (2023-12-26)
 
 ### Feat

@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "vector-vis-graph"
-version = "0.3.0"
+version = "0.4.0"
 description = "Vector visibility graph generation."
 authors = ["Tuna Alikaşifoğlu <tunakasif@gmail.com>"]
 
@@ -59,7 +59,7 @@ disallow_untyped_defs = true
 [tool.commitizen]
 name = "cz_conventional_commits"
 tag_format = "$version"
-version = "0.3.0"
+version = "0.4.0"
 version_files = [
     "pyproject.toml:^version",
     "vector_vis_graph/__init__.py:__version__",
