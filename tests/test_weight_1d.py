@@ -13,9 +13,11 @@ def test_natural_vvg_1d(time_length: int, penetrable_limit: int) -> None:
     np.random.seed(0)
 
     X = np.random.rand(time_length)
-    adj = natural_vvg(X, penetrable_limit=penetrable_limit, weight_method=WeightMethod.TIME_DIFF_EUCLIDEAN_DISTANCE)
+    adj = natural_vvg(
+        X, directed=True, weight_method=WeightMethod.TIME_DIFF_EUCLIDEAN_DISTANCE, penetrable_limit=penetrable_limit
+    )
 
-    vg = NaturalVG(directed="left_to_right", penetrable_limit=penetrable_limit, weighted="abs_slope")
+    vg = NaturalVG(directed="left_to_right", weighted="abs_slope", penetrable_limit=penetrable_limit)
     vg.build(X)
     ts2vg_adj = vg.adjacency_matrix(use_weights=True, no_weight_value=0)
     assert np.allclose(adj, ts2vg_adj)

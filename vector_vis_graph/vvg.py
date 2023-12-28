@@ -14,10 +14,12 @@ def natural_vvg(
     timeline: Optional[np.ndarray] = None,
     weight_method: WeightMethod = WeightMethod.UNWEIGHTED,
     penetrable_limit: int = 0,
+    directed: bool = False,
 ) -> np.ndarray:
     multivariate, timeline = _ensure_vvg_input(multivariate, timeline)
     weight_func = get_weight_calculation_func(weight_method)
-    return _vvg_loop(multivariate, timeline, _is_visible_natural, weight_func, penetrable_limit)
+    adj = _vvg_loop(multivariate, timeline, _is_visible_natural, weight_func, penetrable_limit)
+    return adj if directed else adj + adj.T
 
 
 def horizontal_vvg(
@@ -26,10 +28,12 @@ def horizontal_vvg(
     timeline: Optional[np.ndarray] = None,
     weight_method: WeightMethod = WeightMethod.UNWEIGHTED,
     penetrable_limit: int = 0,
+    directed: bool = False,
 ) -> np.ndarray:
     multivariate, timeline = _ensure_vvg_input(multivariate, timeline)
     weight_func = get_weight_calculation_func(weight_method)
-    return _vvg_loop(multivariate, timeline, _is_visible_horizontal, weight_func, penetrable_limit)
+    adj = _vvg_loop(multivariate, timeline, _is_visible_horizontal, weight_func, penetrable_limit)
+    return adj if directed else adj + adj.T
 
 
 @njit(cache=True)

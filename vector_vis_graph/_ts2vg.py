@@ -7,12 +7,18 @@ from ts2vg.graph._natural import _compute_graph as _compute_graph_natural
 from vector_vis_graph.vvg import _ensure_vvg_input
 
 
-def natural_vvg_ts2vg(multivariate: np.ndarray, timeline: Optional[np.ndarray] = None) -> np.ndarray:
-    return _vvg_ts2vg(_compute_graph_natural, multivariate, timeline)
+def natural_vvg_ts2vg(
+    multivariate: np.ndarray, timeline: Optional[np.ndarray] = None, directed: bool = False
+) -> np.ndarray:
+    adj = _vvg_ts2vg(_compute_graph_natural, multivariate, timeline)
+    return adj if directed else adj + adj.T
 
 
-def horizontal_vvg_ts2vg(multivariate: np.ndarray, timeline: Optional[np.ndarray] = None) -> np.ndarray:
-    return _vvg_ts2vg(_compute_graph_horizontal, multivariate, timeline)
+def horizontal_vvg_ts2vg(
+    multivariate: np.ndarray, timeline: Optional[np.ndarray] = None, directed: bool = False
+) -> np.ndarray:
+    adj = _vvg_ts2vg(_compute_graph_horizontal, multivariate, timeline)
+    return adj if directed else adj + adj.T
 
 
 def _vvg_ts2vg(
