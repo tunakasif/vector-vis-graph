@@ -58,6 +58,12 @@ def _is_visible_horizontal(
         return False
 
 
+@njit(cache=True)
+def _unitarize(matrix: np.ndarray) -> np.ndarray:
+    norms = np.sqrt(np.square(matrix).sum(axis=-1))  # njit does not support `keepdims`
+    return matrix / norms.reshape(-1, 1)
+
+
 @njit(cache=True, parallel=True)
 def _vvg_loop(
     multivariate: np.ndarray,
@@ -66,7 +72,7 @@ def _vvg_loop(
     weight_func: WeightFuncType,
     penetrable_limit: int = 0,
 ) -> np.ndarray:
-    projections = np.dot(multivariate, multivariate.T)
+    projections = np.dot(_unitarize(multivariate), multivariate.T)
     time_length = timeline.shape[0]
     vvg_adjacency = np.zeros((time_length, time_length))
     for i in prange(time_length - 1):
