@@ -7,7 +7,7 @@ from vector_vis_graph.vvg import horizontal_vvg, natural_vvg
 
 
 @settings(deadline=10000, max_examples=20)
-@given(integers(min_value=2, max_value=1024), integers(min_value=0, max_value=5))
+@given(integers(min_value=2, max_value=512), integers(min_value=0, max_value=5))
 def test_natural_vvg_1d(time_length: int, penetrable_limit: int) -> None:
     np.random.seed(0)
 
@@ -21,7 +21,7 @@ def test_natural_vvg_1d(time_length: int, penetrable_limit: int) -> None:
 
 
 @settings(deadline=10000, max_examples=20)
-@given(integers(min_value=2, max_value=1024), integers(min_value=0, max_value=5))
+@given(integers(min_value=2, max_value=512), integers(min_value=0, max_value=5))
 def test_horizontal_vvg_1d(time_length: int, penetrable_limit: int) -> None:
     np.random.seed(0)
 

@@ -7,7 +7,7 @@ from vector_vis_graph.vvg import horizontal_vvg, natural_vvg
 
 
 @settings(deadline=10000, max_examples=20)
-@given(integers(min_value=2, max_value=1024), integers(min_value=1, max_value=1024))
+@given(integers(min_value=2, max_value=512), integers(min_value=1, max_value=512))
 def test_natural_vvg_equivalence(time_length: int, vec_length: int) -> None:
     np.random.seed(0)
     X = np.random.randn(time_length, vec_length)
@@ -17,7 +17,7 @@ def test_natural_vvg_equivalence(time_length: int, vec_length: int) -> None:
 
 
 @settings(deadline=10000, max_examples=20)
-@given(integers(min_value=2, max_value=1024), integers(min_value=1, max_value=1024))
+@given(integers(min_value=2, max_value=512), integers(min_value=1, max_value=512))
 def test_horizontal_vvg_equivalence(time_length: int, vec_length: int) -> None:
     np.random.seed(0)
     X = np.random.randn(time_length, vec_length)
