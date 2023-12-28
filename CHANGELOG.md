@@ -1,3 +1,19 @@
+## 0.6.0 (2023-12-28)
+
+### Feat
+
+- **vvg**: make `undirected` default like `ts2vg`
+- **vvg**: add custom weight calculation
+
+### Fix
+
+- normalize projections to have correct weights
+
+### Refactor
+
+- **ts2vg**: export naive `ts2vg` sanity check
+- simplify code structure and rename
+
 ## 0.5.0 (2023-12-27)
 
 ### Feat
