@@ -37,40 +37,40 @@ def get_weight_calculation_func(weight_calculation: WeightMethod = WeightMethod.
             raise ValueError(f"Unknown weight calculation: {weight_calculation}")
 
 
-@njit(cache=True)
+@njit
 def unweighted(_vector_a: np.ndarray, _vector_b: np.ndarray, _time_a: float, _time_b: float) -> float:
     return 1.0
 
 
-@njit(cache=True)
+@njit
 def cosine_similarity(vector_a: np.ndarray, vector_b: np.ndarray, _time_a: float, _time_b: float) -> float:
     magnitude = float(np.linalg.norm(vector_a)) * float(np.linalg.norm(vector_b))
     return np.dot(vector_a, vector_b) / magnitude
 
 
-@njit(cache=True)
+@njit
 def time_diff_cosine_similarity(vector_a: np.ndarray, vector_b: np.ndarray, time_a: float, time_b: float) -> float:
     return cosine_similarity(vector_a, vector_b, time_a, time_b) / np.abs(time_b - time_a)
 
 
-@njit(cache=True)
+@njit
 def euclidean_distance(vector_a: np.ndarray, vector_b: np.ndarray, _time_a: float, _time_b: float) -> float:
     return float(np.linalg.norm(vector_a - vector_b))
 
 
-@njit(cache=True)
+@njit
 def time_diff_euclidean_distance(vector_a: np.ndarray, vector_b: np.ndarray, time_a: float, time_b: float) -> float:
     return euclidean_distance(vector_a, vector_b, time_a, time_b) / np.abs(time_b - time_a)
 
 
-@njit(cache=True)
+@njit
 def normalized_euclidean_distance(vector_a: np.ndarray, vector_b: np.ndarray, _time_a: float, _time_b: float) -> float:
     diff_norm = float(np.linalg.norm(vector_a - vector_b))
     norm_sum = float(np.linalg.norm(vector_a)) + float(np.linalg.norm(vector_b))
     return diff_norm / norm_sum
 
 
-@njit(cache=True)
+@njit
 def time_diff_normalized_euclidean_distance(
     vector_a: np.ndarray, vector_b: np.ndarray, time_a: float, time_b: float
 ) -> float:

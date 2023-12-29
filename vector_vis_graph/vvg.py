@@ -36,7 +36,7 @@ def horizontal_vvg(
     return adj if directed else adj + adj.T
 
 
-@njit(cache=True)
+@njit
 def _is_visible_natural(
     curr_projection: np.ndarray, timeline: np.ndarray, i: int, j: int, penetrable_limit: int = 0
 ) -> bool:
@@ -51,7 +51,7 @@ def _is_visible_natural(
         return False
 
 
-@njit(cache=True)
+@njit
 def _is_visible_horizontal(
     curr_projection: np.ndarray, _timeline: np.ndarray, i: int, j: int, penetrable_limit: int = 0
 ) -> bool:
@@ -62,13 +62,13 @@ def _is_visible_horizontal(
         return False
 
 
-@njit(cache=True)
+@njit
 def _unitarize(matrix: np.ndarray) -> np.ndarray:
     norms = np.sqrt(np.square(matrix).sum(axis=-1))  # njit does not support `keepdims`
     return matrix / norms.reshape(-1, 1)
 
 
-@njit(cache=True, parallel=True)
+@njit(parallel=True)
 def _vvg_loop(
     multivariate: np.ndarray,
     timeline: np.ndarray,
