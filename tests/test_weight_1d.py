@@ -3,12 +3,13 @@ from hypothesis import given, settings
 from hypothesis.strategies import integers
 from ts2vg import NaturalVG
 
+from tests import HYPOTHESIS_MAX_EXAMPLES, HYPOTHESIS_MAX_LENGTH
 from vector_vis_graph.vvg import natural_vvg
 from vector_vis_graph.weight_calculation import WeightMethod
 
 
-@settings(deadline=10000, max_examples=20)
-@given(integers(min_value=2, max_value=512), integers(min_value=0, max_value=5))
+@settings(deadline=None, max_examples=HYPOTHESIS_MAX_EXAMPLES)
+@given(integers(min_value=2, max_value=HYPOTHESIS_MAX_LENGTH), integers(min_value=0, max_value=5))
 def test_natural_vvg_1d(time_length: int, penetrable_limit: int) -> None:
     np.random.seed(0)
 
