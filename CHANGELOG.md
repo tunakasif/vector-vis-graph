@@ -1,3 +1,9 @@
+## 0.6.1 (2023-12-29)
+
+### Fix
+
+- in attempt to avoid flaky tests remove cache
+
 ## 0.6.0 (2023-12-28)
 
 ### Feat
