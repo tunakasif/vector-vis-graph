@@ -1,6 +1,5 @@
 PROJECT_NAME:=vector_vis_graph
 EXECUTER:=poetry run
-WORKER_COUNT:=$(shell nproc)
 
 all: format lint security test requirements
 
@@ -17,7 +16,7 @@ requirements:
 	poetry export -f requirements.txt -o requirements.txt --with dev,test --without-hashes
 
 test:
-	$(EXECUTER) pytest -n $(WORKER_COUNT) --cov-report term-missing --cov-report html --cov $(PROJECT_NAME)/
+	 $(EXECUTER) pytest -n auto --cov-report term-missing --cov-report html --cov $(PROJECT_NAME)/
 
 format:
 	$(EXECUTER) ruff format .
