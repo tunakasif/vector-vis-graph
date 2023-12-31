@@ -8,13 +8,13 @@ WeightFuncType = Callable[[np.ndarray, np.ndarray, float, float], float]
 
 
 class WeightMethod(Enum):
-    UNWEIGHTED = auto()
     COSINE_SIMILARITY = auto()
-    TIME_DIFF_COSINE_SIMILARITY = auto()
     EUCLIDEAN_DISTANCE = auto()
-    TIME_DIFF_EUCLIDEAN_DISTANCE = auto()
     NORMALIZED_EUCLIDEAN_DISTANCE = auto()
+    TIME_DIFF_COSINE_SIMILARITY = auto()
+    TIME_DIFF_EUCLIDEAN_DISTANCE = auto()
     TIME_DIFF_NORMALIZED_EUCLIDEAN_DISTANCE = auto()
+    UNWEIGHTED = auto()
 
 
 def get_weight_calculation_func(weight_calculation: WeightMethod = WeightMethod.COSINE_SIMILARITY) -> WeightFuncType:

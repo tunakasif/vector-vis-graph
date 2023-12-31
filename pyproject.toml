@@ -30,6 +30,7 @@ pytest-xdist = "^3.5.0"
 
 [tool.ruff]
 line-length = 120
+extend-exclude = ["docs"]
 
 [tool.ruff.format]
 # Like Black
