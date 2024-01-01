@@ -64,6 +64,20 @@ def _is_visible_horizontal(
 
 @njit
 def _unitarize(matrix: np.ndarray) -> np.ndarray:
+    """Row normalize a matrix by dividing each row by its `l2`-norm. The `np.linalg.norm()`
+    does not support `kwargs` like `axis=1` or `keepdims=True` for `njit` compilation. Therefore,
+    implemented through `np.sqrt()`, `np.square()` and `np.sum()`.
+
+    Parameters
+    ----------
+    matrix : np.ndarray
+        Input matrix.
+
+    Returns
+    -------
+    np.ndarray
+        Row normalized matrix.
+    """
     norms = np.sqrt(np.square(matrix).sum(axis=-1))  # njit does not support `keepdims`
     return matrix / norms.reshape(-1, 1)
 
@@ -88,6 +102,30 @@ def _vvg_loop(
 
 
 def _ensure_vvg_input(multivariate: np.ndarray, timeline: Optional[np.ndarray] = None) -> tuple[np.ndarray, np.ndarray]:
+    """Ensures that the input `multivariate` and `timeline` are valid for the VVG algorithm.
+
+    Parameters
+    ----------
+    multivariate : np.ndarray
+        1D or 2D array of multivariate time series.
+    timeline : Optional[np.ndarray], optional
+        Time indices of `multivariate`. If not provided, `[0, 1, 2, ...]` is used obtained
+        through `np.arange(multivariate.shape[0])`, by default None.
+
+    Returns
+    -------
+    tuple[np.ndarray, np.ndarray]
+        Suitable `multivariate` and `timeline` for the VVG algorithm.
+
+    Raises
+    ------
+    ValueError
+        If dimensions of `multivariate` and `timeline` are not valid.
+
+        - `timeline` must be a 1D array.
+        - `multivariate` must be a 1D or 2D array.
+        - `multivariate` and `timeline` must have the same length.
+    """
     if timeline is None:
         timeline = np.arange(multivariate.shape[0])
 
