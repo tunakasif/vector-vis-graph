@@ -148,10 +148,10 @@ def cosine_similarity(vector_a: np.ndarray, vector_b: np.ndarray, _time_a: float
         The vector of the first node, i.e., prior time instance.
     vector_b : np.ndarray
         The vector of the second node, i.e., latter time instance.
-    _time_a : float, optional
-        NOT USED value of the prior time instance, by default 0.0.
-    _time_b : float, optional
-        NOT USED value of the latter time instance, by default 1.0.
+    _time_a : float
+        NOT USED value of the prior time instance.
+    _time_b : float
+        NOT USED value of the latter time instance.
 
     Returns
     -------
@@ -212,10 +212,10 @@ def euclidean_distance(vector_a: np.ndarray, vector_b: np.ndarray, _time_a: floa
         The vector of the first node, i.e., prior time instance.
     vector_b : np.ndarray
         The vector of the second node, i.e., latter time instance.
-    _time_a : float, optional
-        NOT USED value of the prior time instance, by default 0.0.
-    _time_b : float, optional
-        NOT USED value of the latter time instance, by default 1.0.
+    _time_a : float
+        NOT USED value of the prior time instance.
+    _time_b : float
+        NOT USED value of the latter time instance.
 
     Returns
     -------
@@ -273,10 +273,10 @@ def normalized_euclidean_distance(vector_a: np.ndarray, vector_b: np.ndarray, _t
         The vector of the first node, i.e., prior time instance.
     vector_b : np.ndarray
         The vector of the second node, i.e., latter time instance.
-    _time_a : float, optional
-        NOT USED value of the prior time instance, by default 0.0.
-    _time_b : float, optional
-        NOT USED value of the latter time instance, by default 1.0.
+    _time_a : float
+        NOT USED value of the prior time instance.
+    _time_b : float
+        NOT USED value of the latter time instance.
 
     Returns
     -------
@@ -308,9 +308,9 @@ def time_diff_normalized_euclidean_distance(
     vector_b : np.ndarray
         The vector of the second node, i.e., latter time instance.
     time_a : float
-        NOT USED value of the prior time instance, by default 0.0.
+        The value of the prior time instance.
     time_b : float
-        NOT USED value of the latter time instance, by default 1.0.
+        The value of the latter time instance.
 
     Returns
     -------
