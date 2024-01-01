@@ -1,3 +1,18 @@
+## 0.7.0 (2024-01-01)
+
+### Feat
+
+- allow import from package root
+
+### Fix
+
+- **vvg**: ensure input dimension check is correct
+- add `unique` option to `WeightMethod` enum
+
+### Refactor
+
+- alphabetically sort `WeightMethod` enums
+
 ## 0.6.1 (2023-12-29)
 
 ### Fix
