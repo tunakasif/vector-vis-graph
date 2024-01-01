@@ -90,7 +90,8 @@ def _vvg_loop(
 def _ensure_vvg_input(multivariate: np.ndarray, timeline: Optional[np.ndarray] = None) -> tuple[np.ndarray, np.ndarray]:
     if timeline is None:
         timeline = np.arange(multivariate.shape[0])
-    elif timeline.ndim != 1:
+
+    if timeline.ndim != 1:
         raise ValueError(f"timeline must be a 1D array, got {timeline.shape}")
     elif multivariate.ndim < 1 or multivariate.ndim > 2:
         raise ValueError(f"multivariate must be a 1D or 2D array, got {multivariate.shape}")
