@@ -1,4 +1,4 @@
-from enum import Enum, auto
+from enum import Enum, auto, unique
 from typing import Callable
 
 import numpy as np
@@ -7,6 +7,7 @@ from numba import njit
 WeightFuncType = Callable[[np.ndarray, np.ndarray, float, float], float]
 
 
+@unique
 class WeightMethod(Enum):
     COSINE_SIMILARITY = auto()
     EUCLIDEAN_DISTANCE = auto()
