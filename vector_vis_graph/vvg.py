@@ -3,11 +3,7 @@ from typing import Callable, Optional
 import numpy as np
 from numba import njit, prange
 
-from vector_vis_graph.weight_calculation import (
-    WeightFuncType,
-    WeightMethod,
-    get_weight_calculation_func,
-)
+from vector_vis_graph.weight_calculation import WeightFuncType, WeightMethod, get_weight_calculation_func
 
 VisibilityFuncType = Callable[[np.ndarray, np.ndarray, int, int, int], bool]
 
@@ -20,6 +16,44 @@ def natural_vvg(
     penetrable_limit: int = 0,
     directed: bool = False,
 ) -> np.ndarray:
+    """Generate a vector visibility graph (VVG) from a multivariate time series using the natural visibility,
+    and returns the adjacency matrix of the VVG as 2D ``np.ndarray``. It also irregularly sampled time series,
+    provided through ``timeline``. By default, the VVG is unweighted, more weight options are available through
+    ``WeightMethod``. The ``penetrable_limit`` is the number of allowances to disagree with visibility conditions.
+
+    Parameters
+    ----------
+    multivariate : np.ndarray
+        1D or 2D array of multivariate time series.
+    timeline : Optional[np.ndarray], optional
+        Time indices of `multivariate`. If not provided, `[0, 1, 2, ...]` is used obtained
+        through `np.arange(multivariate.shape[0])`, by default None.
+    weight_method : WeightMethod, optional
+        By default the adjacency is unweighted ``{0, 1}``, other options are in ``WeightMethod``, by default
+        ``WeightMethod.UNWEIGHTED``.
+    penetrable_limit : int, optional
+        Number of allowances to disagree with visibility conditions, e.g., still allows "visibility" even if some
+        in-between points do not satisfy the visibility condition. This is useful for noisy data, by default 0.
+    directed : bool, optional
+        The adjacency matrix is generated in a ``left-to-right`` directed format, although by default undirected
+        version is returned by ``A + A.T`` operation, by default False (undirected).
+
+    Returns
+    -------
+    np.ndarray
+        The adjacency matrix of the vector visibility graph (VVG) as 2D ``np.ndarray``.
+
+    Examples
+    --------
+    >>> import numpy as np
+    >>> from vector_vis_graph import WeightMethod, natural_vvg
+
+    >>> TIME_LENGTH, VEC_SIZE = 100, 64
+    >>> multivariate_ts = np.random.rand(TIME_LENGTH, VEC_SIZE)
+
+    >>> nvvg_adj = natural_vvg(multivariate_ts)
+    >>> nvvg_adj = natural_vvg(multivariate_ts, timeline=np.arange(0, 2 * TIME_LENGTH, 2), weight_method=WeightMethod.COSINE_SIMILARITY, penetrable_limit=2, directed=True)
+    """
     multivariate, timeline = _ensure_vvg_input(multivariate, timeline)
     weight_func = get_weight_calculation_func(weight_method)
     adj = _vvg_loop(multivariate, timeline, _is_visible_natural, weight_func, penetrable_limit)
@@ -34,6 +68,44 @@ def horizontal_vvg(
     penetrable_limit: int = 0,
     directed: bool = False,
 ) -> np.ndarray:
+    """Generate a vector visibility graph (VVG) from a multivariate time series using the horizontal visibility,
+    and returns the adjacency matrix of the VVG as 2D ``np.ndarray``. It also irregularly sampled time series,
+    provided through ``timeline``. By default, the VVG is unweighted, more weight options are available through
+    ``WeightMethod``. The ``penetrable_limit`` is the number of allowances to disagree with visibility conditions.
+
+    Parameters
+    ----------
+    multivariate : np.ndarray
+        1D or 2D array of multivariate time series.
+    timeline : Optional[np.ndarray], optional
+        Time indices of `multivariate`. If not provided, `[0, 1, 2, ...]` is used obtained
+        through `np.arange(multivariate.shape[0])`, by default None.
+    weight_method : WeightMethod, optional
+        By default the adjacency is unweighted ``{0, 1}``, other options are in ``WeightMethod``, by default
+        ``WeightMethod.UNWEIGHTED``.
+    penetrable_limit : int, optional
+        Number of allowances to disagree with visibility conditions, e.g., still allows "visibility" even if some
+        in-between points do not satisfy the visibility condition. This is useful for noisy data, by default 0.
+    directed : bool, optional
+        The adjacency matrix is generated in a ``left-to-right`` directed format, although by default undirected
+        version is returned by ``A + A.T`` operation, by default False (undirected).
+
+    Returns
+    -------
+    np.ndarray
+        The adjacency matrix of the vector visibility graph (VVG) as 2D ``np.ndarray``.
+
+    Examples
+    --------
+    >>> import numpy as np
+    >>> from vector_vis_graph import WeightMethod, horizontal_vvg
+
+    >>> TIME_LENGTH, VEC_SIZE = 100, 64
+    >>> multivariate_ts = np.random.rand(TIME_LENGTH, VEC_SIZE)
+
+    >>> hvvg_adj = horizontal_vvg(multivariate_ts)
+    >>> hvvg_adj = horizontal_vvg(multivariate_ts, timeline=np.arange(0, 2 * TIME_LENGTH, 2), weight_method=WeightMethod.COSINE_SIMILARITY, penetrable_limit=2, directed=True)
+    """
     multivariate, timeline = _ensure_vvg_input(multivariate, timeline)
     weight_func = get_weight_calculation_func(weight_method)
     adj = _vvg_loop(multivariate, timeline, _is_visible_horizontal, weight_func, penetrable_limit)
