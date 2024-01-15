@@ -3,7 +3,11 @@ from typing import Callable, Optional
 import numpy as np
 from numba import njit, prange
 
-from vector_vis_graph.weight_calculation import WeightFuncType, WeightMethod, get_weight_calculation_func
+from vector_vis_graph.weight_calculation import (
+    WeightFuncType,
+    WeightMethod,
+    get_weight_calculation_func,
+)
 
 VisibilityFuncType = Callable[[np.ndarray, np.ndarray, int, int, int], bool]
 
@@ -38,11 +42,23 @@ def horizontal_vvg(
 
 @njit
 def _is_visible_natural(
-    curr_projection: np.ndarray, timeline: np.ndarray, i: int, j: int, penetrable_limit: int = 0
+    curr_projection: np.ndarray,
+    timeline: np.ndarray,
+    i: int,
+    j: int,
+    penetrable_limit: int = 0,
 ) -> bool:
     if i < j:
-        first_value, middle_values, last_value = curr_projection[i], curr_projection[i + 1 : j], curr_projection[j]
-        first_time, middle_times, last_time = timeline[i], timeline[i + 1 : j], timeline[j]
+        first_value, middle_values, last_value = (
+            curr_projection[i],
+            curr_projection[i + 1 : j],
+            curr_projection[j],
+        )
+        first_time, middle_times, last_time = (
+            timeline[i],
+            timeline[i + 1 : j],
+            timeline[j],
+        )
 
         lhs = np.divide(middle_values - last_value, last_time - middle_times)
         rhs = (first_value - last_value) / (last_time - first_time)
@@ -53,10 +69,18 @@ def _is_visible_natural(
 
 @njit
 def _is_visible_horizontal(
-    curr_projection: np.ndarray, _timeline: np.ndarray, i: int, j: int, penetrable_limit: int = 0
+    curr_projection: np.ndarray,
+    _timeline: np.ndarray,
+    i: int,
+    j: int,
+    penetrable_limit: int = 0,
 ) -> bool:
     if i < j:
-        first, middle, last = curr_projection[i], curr_projection[i + 1 : j], curr_projection[j]
+        first, middle, last = (
+            curr_projection[i],
+            curr_projection[i + 1 : j],
+            curr_projection[j],
+        )
         return np.sum(middle >= min(first, last)) <= penetrable_limit
     else:
         return False
