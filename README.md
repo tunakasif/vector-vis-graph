@@ -31,7 +31,7 @@ or add the following to your `pyproject.toml` file:
 
 ```toml
 [tool.poetry.dependencies]
-vector-vis-graph = {git = "github.com/tunakasif/vector-vis-graph.git"}
+vector-vis-graph = { git = "https://github.com/tunakasif/vector-vis-graph.git" }
 ```
 
 ## Usage
