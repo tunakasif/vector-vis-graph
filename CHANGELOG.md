@@ -1,3 +1,9 @@
+## 0.7.3 (2024-01-15)
+
+### Fix
+
+- move `ts2vg` to test dependencies
+
 ## 0.7.2 (2024-01-15)
 
 ### Fix
