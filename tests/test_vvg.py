@@ -3,7 +3,7 @@ from hypothesis import given, settings
 from hypothesis.strategies import integers
 
 from tests import HYPOTHESIS_MAX_EXAMPLES, HYPOTHESIS_MAX_LENGTH
-from vector_vis_graph._ts2vg import horizontal_vvg_ts2vg, natural_vvg_ts2vg
+from tests._ts2vg import horizontal_vvg_ts2vg, natural_vvg_ts2vg
 from vector_vis_graph.vvg import horizontal_vvg, natural_vvg
 
 
