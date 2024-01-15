@@ -1,7 +1,12 @@
 # Vector Visibility Graph
 
+[![PyPI](https://img.shields.io/pypi/v/vector-vis-graph)](https://pypi.org/project/vector-vis-graph)
+[![Conda (channel only)](https://img.shields.io/conda/vn/conda-forge/vector-vis-graph)](https://anaconda.org/conda-forge/vector-vis-graph)
 [![Build](https://github.com/tunakasif/vector-vis-graph/actions/workflows/build.yml/badge.svg)](https://github.com/tunakasif/vector-vis-graph/actions/workflows/build.yml)
 [![codecov](https://codecov.io/gh/tunakasif/vector-vis-graph/graph/badge.svg?token=1RQ1RDMT9G)](https://codecov.io/gh/tunakasif/vector-vis-graph)
+[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/vector-vis-graph)](https://pypi.org/project/vector-vis-graph)
+[![PyPI - Downloads](https://img.shields.io/pypi/dm/vector-vis-graph)](https://pypi.org/project/vector-vis-graph)
+[![GitHub](https://img.shields.io/github/license/tunakasif/vector-vis-graph)](https://github.com/tunakasif/vector-vis-graph/blob/main/LICENSE)
 [![NumPy](https://img.shields.io/badge/numpy-%23013243.svg?logo=numpy&logoColor=white)](https://numpy.org/)
 [![Numba](https://img.shields.io/badge/numba-%23013243.svg?logo=numba&logoColor=white)](https://numba.pydata.org/)
 
@@ -9,29 +14,22 @@ This repository contains the `Numba` JIT-compiled implementation of the _Vector 
 
 ## Installation
 
-### For Usage
-
-This GitHub repository is `pip`/`poetry` installable. You can install the package using `pip` or `poetry` as follows:
-
-#### Using `pip`
+You can install the package directly from [`PYPI`](https://pypi.org/project/vector-vis-graph/) using `pip` or `poetry` as follows:
 
 ```sh
-pip install git+https://github.com/tunakasif/vector-vis-graph.git
+pip install vector-vis-graph
 ```
 
-#### Using `poetry`
-
-Either run the following command:
+or
 
 ```sh
-poetry add git+https://github.com/tunakasif/vector-vis-graph.git
+poetry add vector-vis-graph
 ```
 
-or add the following to your `pyproject.toml` file:
+or directly from [`Conda`](https://anaconda.org/conda-forge/vector-vis-graph)
 
-```toml
-[tool.poetry.dependencies]
-vector-vis-graph = { git = "https://github.com/tunakasif/vector-vis-graph.git" }
+```sh
+conda install -c conda-forge vector-vis-graph
 ```
 
 ## Usage
