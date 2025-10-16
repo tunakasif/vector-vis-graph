@@ -1,3 +1,18 @@
+## 0.8.0 (2025-10-16)
+
+### Feat
+
+- **build**: add support for `3.12` and `3.13`
+- **build**: convert from `poetry` to `uv`
+
+### Fix
+
+- **tox**: correct version mapping for 3.12 & 3.13
+
+### Refactor
+
+- lint the repository with `ruff`
+
 ## 0.7.3 (2024-01-15)
 
 ### Fix
