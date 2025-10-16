@@ -1,6 +1,6 @@
 [project]
 name = "vector-vis-graph"
-version = "0.8.0"
+version = "0.8.1"
 description = "Vector visibility graph generation from multivariate time series."
 readme = "README.md"
 authors = [ { name = "Tuna Alikaşifoğlu", email = "tunakasif@gmail.com" } ]
@@ -68,7 +68,7 @@ disallow_untyped_defs = true
 name = "cz_conventional_commits"
 tag_format = "$version"
 version_provider = "uv"
-version = "0.8.0"
+version = "0.8.1"
 version_files = [
   "pyproject.toml:^version",
   "vector_vis_graph/__init__.py:__version__",
