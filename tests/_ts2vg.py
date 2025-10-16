@@ -1,4 +1,4 @@
-from typing import Callable, Optional
+from collections.abc import Callable
 
 import numpy as np
 from ts2vg.graph._horizontal import _compute_graph as _compute_graph_horizontal
@@ -8,21 +8,21 @@ from vector_vis_graph.vvg import _ensure_vvg_input
 
 
 def natural_vvg_ts2vg(
-    multivariate: np.ndarray, timeline: Optional[np.ndarray] = None, directed: bool = False
+    multivariate: np.ndarray, timeline: np.ndarray | None = None, directed: bool = False
 ) -> np.ndarray:
     adj = _vvg_ts2vg(_compute_graph_natural, multivariate, timeline)
     return adj if directed else adj + adj.T
 
 
 def horizontal_vvg_ts2vg(
-    multivariate: np.ndarray, timeline: Optional[np.ndarray] = None, directed: bool = False
+    multivariate: np.ndarray, timeline: np.ndarray | None = None, directed: bool = False
 ) -> np.ndarray:
     adj = _vvg_ts2vg(_compute_graph_horizontal, multivariate, timeline)
     return adj if directed else adj + adj.T
 
 
 def _vvg_ts2vg(
-    compute_graph_func: Callable, multivariate: np.ndarray, timeline: Optional[np.ndarray] = None
+    compute_graph_func: Callable, multivariate: np.ndarray, timeline: np.ndarray | None = None
 ) -> np.ndarray:
     multivariate, timeline = _ensure_vvg_input(multivariate, timeline)
     projections = np.dot(multivariate, multivariate.T)

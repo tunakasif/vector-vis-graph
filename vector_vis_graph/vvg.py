@@ -1,4 +1,4 @@
-from typing import Callable, Optional
+from collections.abc import Callable
 
 import numpy as np
 from numba import njit, prange
@@ -11,7 +11,7 @@ VisibilityFuncType = Callable[[np.ndarray, np.ndarray, int, int, int], bool]
 def natural_vvg(
     multivariate: np.ndarray,
     *,
-    timeline: Optional[np.ndarray] = None,
+    timeline: np.ndarray | None = None,
     weight_method: WeightMethod = WeightMethod.UNWEIGHTED,
     penetrable_limit: int = 0,
     directed: bool = False,
@@ -63,7 +63,7 @@ def natural_vvg(
 def horizontal_vvg(
     multivariate: np.ndarray,
     *,
-    timeline: Optional[np.ndarray] = None,
+    timeline: np.ndarray | None = None,
     weight_method: WeightMethod = WeightMethod.UNWEIGHTED,
     penetrable_limit: int = 0,
     directed: bool = False,
@@ -197,7 +197,7 @@ def _vvg_loop(
     return vvg_adjacency
 
 
-def _ensure_vvg_input(multivariate: np.ndarray, timeline: Optional[np.ndarray] = None) -> tuple[np.ndarray, np.ndarray]:
+def _ensure_vvg_input(multivariate: np.ndarray, timeline: np.ndarray | None = None) -> tuple[np.ndarray, np.ndarray]:
     """Ensures that the input `multivariate` and `timeline` are valid for the VVG algorithm.
 
     Parameters

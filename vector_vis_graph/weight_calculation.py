@@ -1,5 +1,5 @@
+from collections.abc import Callable
 from enum import Enum, auto, unique
-from typing import Callable
 
 import numpy as np
 from numba import njit
