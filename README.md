@@ -34,16 +34,10 @@ This package is developed for the work titled "[VISPool: Enhancing Transformer E
 
 ## Installation
 
-You can install the package directly from [`PYPI`](https://pypi.org/project/vector-vis-graph/) using `pip` or `poetry` as follows:
+You can install the package directly from [`PYPI`](https://pypi.org/project/vector-vis-graph/) using `pip` as follows:
 
 ```sh
 pip install vector-vis-graph
-```
-
-or
-
-```sh
-poetry add vector-vis-graph
 ```
 
 or directly from [`Conda`](https://anaconda.org/conda-forge/vector-vis-graph)
