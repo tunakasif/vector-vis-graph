@@ -1,19 +1,16 @@
 PROJECT_NAME:=vector_vis_graph
-EXECUTER:=poetry run
+EXECUTER:=uv run
 
-all: format lint security test requirements
+all: format lint security test
 
 install:
 	git init
-	$(EXECUTER) poetry install
+	uv sync --all-groups
 	$(EXECUTER) pre-commit install
 
 clean:
 	rm -rf .hypothesis .ipynb_checkpoints .mypy_cache .pytest_cache .coverage htmlcov
 	$(EXECUTER) ruff clean
-
-requirements:
-	poetry export -f requirements.txt -o requirements.txt --with dev,test --without-hashes
 
 test:
 	 $(EXECUTER) pytest -n auto --cov-report term-missing --cov-report html --cov $(PROJECT_NAME)/

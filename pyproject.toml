@@ -1,34 +1,36 @@
-[tool.poetry]
+[project]
 name = "vector-vis-graph"
 version = "0.7.3"
 description = "Vector visibility graph generation from multivariate time series."
-authors = ["Tuna Alikaşifoğlu <tunakasif@gmail.com>"]
+authors = [ { name = "Tuna Alikaşifoğlu", email = "tunakasif@gmail.com" } ]
 readme = "README.md"
-packages = [{ include = "vector_vis_graph" }]
+requires-python = ">=3.10,<3.12"
+dependencies = [
+  "numpy>=1.26.2",
+  "numba>=0.58.1",
+  "scipy>=1.11.4",
+]
 
-[tool.poetry.dependencies]
-python = ">=3.10,<3.12"
-numpy = "^1.26.2"
-numba = "^0.58.1"
-scipy = "^1.11.4"
+[dependency-groups]
+dev = [
+    "ruff>=0.1.4",
+    "mypy>=1.6.1",
+    "pre-commit>=3.5.0",
+    "tox>=4.11.3",
+    "bandit>=1.7.5",
+    "ipykernel>=6.27.1",
+    "ipywidgets>=8.1.1",
+    "ipython>=8.0",
+    "perfplot>=0.10.2",
+]
 
-[tool.poetry.group.dev.dependencies]
-ruff = "^0.1.4"
-mypy = "^1.6.1"
-pre-commit = "^3.5.0"
-tox = "^4.11.3"
-bandit = "^1.7.5"
-ipykernel = "^6.27.1"
-ipywidgets = "^8.1.1"
-ipython = "^8.0"
-perfplot = "^0.10.2"
-
-[tool.poetry.group.test.dependencies]
-ts2vg = "^1.2.3"
-pytest = "^7.4.3"
-pytest-cov = "^4.1.0"
-hypothesis = "^6.92.1"
-pytest-xdist = "^3.5.0"
+test = [
+    "ts2vg>=1.2.3",
+    "pytest>=7.4.3",
+    "pytest-cov>=4.1.0",
+    "hypothesis>=6.92.1",
+    "pytest-xdist>=3.5.0",
+]
 
 [tool.ruff]
 line-length = 120
@@ -70,7 +72,3 @@ version_files = [
 ]
 major_version_zero = true
 update_changelog_on_bump = true
-
-[build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
