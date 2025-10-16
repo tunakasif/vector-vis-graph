@@ -1,0 +1,31 @@
+cff-version: 1.2.0
+message: Please cite the following work when using this software.
+preferred-citation:
+  authors:
+    - family-names: Alikaşifoğlu
+      given-names: Tuna
+    - family-names: Aras
+      given-names: Arda
+    - family-names: Koc
+      given-names: Aykut
+  doi: 10.18653/v1/2024.findings-acl.149
+  identifiers:
+    - type: doi
+      value: 10.18653/v1/2024.findings-acl.149
+    - type: url
+      value: http://dx.doi.org/10.18653/v1/2024.findings-acl.149
+  title: >-
+    VISPool: Enhancing Transformer Encoders with Vector Visibility Graph Neural
+    Networks
+  url: http://dx.doi.org/10.18653/v1/2024.findings-acl.149
+  conference:
+    name: Findings of the Association for Computational Linguistics ACL 2024
+  database: Crossref
+  date-published: 2024-01-01
+  year: 2024
+  journal: Findings of the Association for Computational Linguistics ACL 2024
+  publisher:
+    name: Association for Computational Linguistics
+  start: '2547'
+  end: '2556'
+  type: conference-paper
