@@ -67,6 +67,7 @@ disallow_untyped_defs = true
 [tool.commitizen]
 name = "cz_conventional_commits"
 tag_format = "$version"
+version_provider = "uv"
 version = "0.8.0"
 version_files = [
   "pyproject.toml:^version",

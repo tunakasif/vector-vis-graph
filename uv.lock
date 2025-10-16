@@ -1872,7 +1872,7 @@ wheels = [
 
 [[package]]
 name = "vector-vis-graph"
-version = "0.7.3"
+version = "0.8.0"
 source = { virtual = "." }
 dependencies = [
     { name = "numba" },
